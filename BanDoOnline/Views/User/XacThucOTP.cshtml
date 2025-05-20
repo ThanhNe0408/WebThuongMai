@@ -1,0 +1,26 @@
+﻿@model BanDoOnline.Models.KHACHHANG
+
+@{
+    ViewBag.Title = "Xác thực OTP";
+}
+
+<h2>Xác thực OTP</h2>
+
+@using (Html.BeginForm("XacThucOTP", "User", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <label for="otp">OTP</label>
+        <input type="text" name="otp" class="form-control" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Xác thực</button>
+}
+
+@if (!String.IsNullOrEmpty(ViewBag.ThongBao))
+{
+    <div class="alert alert-danger">
+        @ViewBag.ThongBao
+    </div>
+}

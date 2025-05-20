@@ -1,0 +1,76 @@
+﻿@model BanDoOnline.Models.KHACHHANG
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .info-container {
+        border: 1px solid #000;
+        background-color: #ffc0cb;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    th {
+        text-align: right;
+        width: 30%;
+    }
+
+    td {
+        width: 70%;
+    }
+
+    .center-text {
+        text-align: center;
+    }
+
+    .btn-container {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+        .btn-container .btn {
+            margin: 5px;
+        }
+</style>
+
+<div class="container info-container">
+    <h2 class="center-text">Chi tiết thông tin cá nhân</h2>
+    <table class="table">
+        <tr>
+            <th>Họ Tên:</th>
+            <td>@Html.DisplayFor(model => model.HoTen)</td>
+        </tr>
+        <tr>
+            <th>Tài Khoản:</th>
+            <td>@Html.DisplayFor(model => model.TaiKhoan)</td>
+        </tr>
+        <tr>
+            <th>Mật Khẩu:</th>
+            <td>@Html.DisplayFor(model => model.MatKhau)</td>
+        </tr>
+        <tr>
+            <th>Email:</th>
+            <td>@Html.DisplayFor(model => model.Email)</td>
+        </tr>
+        <tr>
+            <th>Địa Chỉ:</th>
+            <td>@Html.DisplayFor(model => model.DiaChi)</td>
+        </tr>
+        <tr>
+            <th>Điện Thoại:</th>
+            <td>@Html.DisplayFor(model => model.DienThoai)</td>
+        </tr>
+        <tr>
+            <th>Ngày Sinh:</th>
+            <td>@Html.DisplayFor(model => model.NgaySinh)</td>
+        </tr>
+    </table>
+
+    <div class="btn-container">
+        @Html.ActionLink("Chỉnh sửa", "Edit", new { id = Model.MaKH }, new { @class = "btn btn-primary" })
+        @Html.ActionLink("Quay lại", "GioiThieu", null, new { @class = "btn btn-secondary" })
+    </div>
+</div>

@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="BanDoOnline" Class="DataClasses1DataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Table Name="dbo.CHITIETDATHANG" Member="CHITIETDATHANGs">
+    <Type Name="CHITIETDATHANG">
+      <Column Name="MaDonHang" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="MaSP" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="SoLuong" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DonGia" Type="System.Decimal" DbType="Decimal(9,2)" CanBeNull="true" />
+      <Column Name="MaSize" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MaColor" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="DONDATHANG_CHITIETDATHANG" Member="DONDATHANG" ThisKey="MaDonHang" OtherKey="MaDonHang" Type="DONDATHANG" IsForeignKey="true" />
+      <Association Name="SANPHAM_CHITIETDATHANG" Member="SANPHAM" ThisKey="MaSP" OtherKey="MaSP" Type="SANPHAM" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CHITIETTONKHO" Member="CHITIETTONKHOs">
+    <Type Name="CHITIETTONKHO">
+      <Column Name="MaSP" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="MaSize" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="MaColor" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="SoLuongTrongKho" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="COLOR_CHITIETTONKHO" Member="COLOR" ThisKey="MaColor" OtherKey="MaColor" Type="COLOR" IsForeignKey="true" />
+      <Association Name="SANPHAM_CHITIETTONKHO" Member="SANPHAM" ThisKey="MaSP" OtherKey="MaSP" Type="SANPHAM" IsForeignKey="true" />
+      <Association Name="SIZE_CHITIETTONKHO" Member="SIZE" ThisKey="MaSize" OtherKey="MaSize" Type="SIZE" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.COLORS" Member="COLORs">
+    <Type Name="COLOR">
+      <Column Name="MaColor" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="TenColor" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Association Name="COLOR_CHITIETTONKHO" Member="CHITIETTONKHOs" ThisKey="MaColor" OtherKey="MaColor" Type="CHITIETTONKHO" />
+      <Association Name="COLOR_SANPHAM" Member="SANPHAMs" ThisKey="MaColor" OtherKey="MaColor" Type="SANPHAM" />
+    </Type>
+  </Table>
+  <Table Name="dbo.DANHGIA" Member="DANHGIAs">
+    <Type Name="DANHGIA">
+      <Column Name="MaDanhGia" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="MaKH" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MaSP" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DiemDanhGia" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NhanXet" Type="System.String" DbType="NText" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="NgayDanhGia" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Association Name="KHACHHANG_DANHGIA" Member="KHACHHANG" ThisKey="MaKH" OtherKey="MaKH" Type="KHACHHANG" IsForeignKey="true" />
+      <Association Name="SANPHAM_DANHGIA" Member="SANPHAM" ThisKey="MaSP" OtherKey="MaSP" Type="SANPHAM" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.DANHMUC" Member="DANHMUCs">
+    <Type Name="DANHMUC">
+      <Column Name="MaDM" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="TenDM" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="DANHMUC_SANPHAM" Member="SANPHAMs" ThisKey="MaDM" OtherKey="MaDM" Type="SANPHAM" />
+    </Type>
+  </Table>
+  <Table Name="dbo.DONDATHANG" Member="DONDATHANGs">
+    <Type Name="DONDATHANG">
+      <Column Name="MaDonHang" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DaThanhToan" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="TinhTrangGiaoHang" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NgayDat" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="NgayGiao" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="MaKH" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="DONDATHANG_CHITIETDATHANG" Member="CHITIETDATHANGs" ThisKey="MaDonHang" OtherKey="MaDonHang" Type="CHITIETDATHANG" />
+    </Type>
+  </Table>
+  <Table Name="dbo.KHACHHANG" Member="KHACHHANGs">
+    <Type Name="KHACHHANG">
+      <Column Name="MaKH" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="HoTen" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="TaiKhoan" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="MatKhau" Type="System.String" DbType="VarChar(15) NOT NULL" CanBeNull="false" />
+      <Column Name="Email" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="DiaChi" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="DienThoai" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="NgaySinh" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Association Name="KHACHHANG_DANHGIA" Member="DANHGIAs" ThisKey="MaKH" OtherKey="MaKH" Type="DANHGIA" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SANPHAM" Member="SANPHAMs">
+    <Type Name="SANPHAM">
+      <Column Name="MaSP" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="TenSP" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="MoTa" Type="System.String" DbType="NText" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="AnhBia" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="NgayCapNhat" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="SoLuongBan" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="GiaBan" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="MaDM" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MaSize" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MaColor" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="SANPHAM_CHITIETDATHANG" Member="CHITIETDATHANGs" ThisKey="MaSP" OtherKey="MaSP" Type="CHITIETDATHANG" />
+      <Association Name="SANPHAM_CHITIETTONKHO" Member="CHITIETTONKHOs" ThisKey="MaSP" OtherKey="MaSP" Type="CHITIETTONKHO" />
+      <Association Name="SANPHAM_DANHGIA" Member="DANHGIAs" ThisKey="MaSP" OtherKey="MaSP" Type="DANHGIA" />
+      <Association Name="DANHMUC_SANPHAM" Member="DANHMUC" ThisKey="MaDM" OtherKey="MaDM" Type="DANHMUC" IsForeignKey="true" />
+      <Association Name="COLOR_SANPHAM" Member="COLOR" ThisKey="MaColor" OtherKey="MaColor" Type="COLOR" IsForeignKey="true" />
+      <Association Name="SIZE_SANPHAM" Member="SIZE" ThisKey="MaSize" OtherKey="MaSize" Type="SIZE" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SIZE" Member="SIZEs">
+    <Type Name="SIZE">
+      <Column Name="MaSize" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="TenSize" Type="System.String" DbType="NVarChar(20) NOT NULL" CanBeNull="false" />
+      <Association Name="SIZE_CHITIETTONKHO" Member="CHITIETTONKHOs" ThisKey="MaSize" OtherKey="MaSize" Type="CHITIETTONKHO" />
+      <Association Name="SIZE_SANPHAM" Member="SANPHAMs" ThisKey="MaSize" OtherKey="MaSize" Type="SANPHAM" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TKADMIN" Member="TKADMINs">
+    <Type Name="TKADMIN">
+      <Column Name="MaAd" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Username" Type="System.String" DbType="NVarChar(200) NOT NULL" CanBeNull="false" />
+      <Column Name="Passwords" Type="System.String" DbType="NVarChar(200) NOT NULL" CanBeNull="false" />
+      <Column Name="HoVaTen" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="SoDienThoai" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="HinhAnh" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+    </Type>
+  </Table>
+</Database>

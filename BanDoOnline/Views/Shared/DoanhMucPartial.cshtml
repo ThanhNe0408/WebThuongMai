@@ -1,0 +1,8 @@
+﻿@model IEnumerable<BanDoOnline.Models.DANHMUC>
+
+<div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
+    @foreach (var danhMuc in Model)
+    {
+        <a href="@Url.Action("tentheodanhmuc", "Home", new { MaDM = danhMuc.MaDM })" class="nav-item nav-link">@danhMuc.TenDM</a>
+    }
+</div>

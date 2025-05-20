@@ -1,0 +1,128 @@
+﻿@using BanDoOnline.Models
+@{
+    ViewBag.Title = "DatHang";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    KHACHHANG kh = (KHACHHANG)Session["TaiKhoan"];
+}
+
+<h2 style="text-align:center;">THÔNG TIN ĐƠN HÀNG</h2>
+
+@if (Model.Count > 0)
+{
+    <table align="center" border="1">
+        <tr style="text-align:center; font-weight:bold;">
+            <td>Mã Sản Phẩm</td>
+            <td>Tên Sản Phẩm</td>
+            <td>Ảnh Bìa</td>
+            <td>Số Lượng</td>
+            <td>Đơn Giá</td>
+            <td>Thành Tiền</td>
+            <td>Size</td>
+            <td>Color</td>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr style="text-align:center; font-weight:bold;">
+                <td align="center">@item.MaSanPham</td>
+                <td>@item.TenSanPham</td>
+                <td><img src="~/Theme/img/img/@item.HinhAnh" style="width:100px;"></td>
+                @using (Html.BeginForm("CapNhatGioHang", "GioHang", new { iMaSach = item.MaSanPham }))
+                {
+                    <td align="center">@item.SoLuong</td>
+                    <td align="center">@string.Format("{0:#,##0,0}", item.GiaBan)</td>
+                    <td align="center">@string.Format("{0:#,##0,0}", item.ThanhTien)</td>
+
+                    <td align="center">
+                        @if (!string.IsNullOrEmpty(item.TenSizeChon))
+                        {
+                            <span>@item.TenSizeChon</span>
+                        }
+                        else
+                        {
+                            <span style="color:red;">Không có size</span>
+                        }
+                    </td>
+
+                    <td align="center">
+                        @if (!string.IsNullOrEmpty(item.TenColorChon))
+                        {
+                            <span>@item.TenColorChon</span>
+                        }
+                        else
+                        {
+                            <span style="color:red;">Không có color</span>
+                        }
+                    </td>
+                }
+            </tr>
+        }
+
+        <tr>
+            <td colspan="3" style="text-align:right; color:red; font-weight:bold; padding-right:5px;">
+                Số lượng sách: @string.Format("{0:#,##0}", ViewBag.TongSoLuong)
+            </td>
+            <td colspan="3" style="text-align:center; color:red; font-weight:bold;">
+                Tổng tiền: @string.Format("{0:#,##0,0}", ViewBag.TongTien) VNĐ
+            </td>
+        </tr>
+        <tr style="font-weight:bold; color:blue; text-align:right;">
+            <td colspan="9">
+                @Html.ActionLink("TRỞ VỀ GIỎ HÀNG", "GioHang", "GioHang")
+            </td>
+        </tr>
+    </table>
+
+    <h2 style="text-align:center">THÔNG TIN ĐẶT HÀNG</h2>
+
+    <table align="center">
+        @using (Html.BeginForm())
+        {
+            @Html.ValidationSummary(true)
+            <tr style="height:40px;">
+                <td>Họ tên khách hàng:</td>
+                <td style="font-weight:bold">@kh.HoTen</td>
+            </tr>
+            <tr style="height:40px;">
+                <td>Địa chỉ:</td>
+                <td style="font-weight:bold">@kh.DiaChi</td>
+            </tr>
+            <tr style="height:40px;">
+                <td>Điện thoại:</td>
+                <td style="font-weight:bold">@kh.DienThoai</td>
+            </tr>
+            <tr style="height:40px;">
+                <td>Ngày đặt:</td>
+                <td style="font-weight:bold">@DateTime.Now.ToShortDateString()</td>
+            </tr>
+            <tr style="height:40px;">
+                <td>Ngày giao:</td>
+                <td style="font-weight:bold">
+                    <input type="date" name="NgayGiao" />
+                    @Html.ValidationMessage("NgayGiao", new { style = "color:red;" })
+                </td>
+            </tr>
+            <tr style="height:40px;">
+                <td></td>
+                <td>
+                    <input type="radio" id="rdoThanhToanKhiNhanHang" name="HinhThucThanhToan" value="ThanhToanKhiNhanHang" />
+                    <label for="rdoThanhToanKhiNhanHang">Thanh toán khi nhận hàng</label>
+                </td>
+                <td>
+                    <input type="submit" value="ĐẶT HÀNG" />
+                </td>
+            </tr>
+            <tr>
+                <td style="border-top:none; text-align:left" colspan="10"> <a href="/GioHang/PaymentWithPayPal" class="btn btn-success">Thanh toán bằng paypal</a></td>
+
+            </tr>
+        }
+    </table>
+    <tr>
+        <td style="border-top:none"><a href="/Home/Index" class="btn btn-primary">Tiếp tục mua sắm</a></td>
+    </tr>
+}
+else
+{
+    <p style="text-align:center; font-weight:bold;">Giỏ hàng của bạn trống. Hãy thêm sản phẩm vào giỏ hàng trước khi đặt hàng.</p>
+    <p style="text-align:center;">@Html.ActionLink("Quay lại cửa hàng", "Index", "Home")</p>
+}

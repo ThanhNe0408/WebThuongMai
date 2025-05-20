@@ -1,0 +1,92 @@
+﻿@{
+    ViewBag.Title = "DangNhap";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // Khởi tạo biến returnUrl từ TempData
+    var returnUrl = TempData["ReturnUrl"] != null ? TempData["ReturnUrl"].ToString() : null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    @Styles.Render("~/Content/Admin/css")
+    <style type="text/css">
+        td {
+            height: 40px;
+        }
+    </style>
+</head>
+<body>
+    <h4 style="color:red; text-align:center;">@ViewBag.ThongBao</h4>
+    <h2 style="text-align:center;">ĐĂNG NHẬP</h2>
+    @using (Html.BeginForm("DangNhap", "User", new { returnUrl }, FormMethod.Post, new { @id = "dangNhapForm" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        <table align="center">
+            @if (Request.Cookies["TenDN"] != null && Request.Cookies["Matkhau"] != null)
+            {
+                <tr>
+                    <td>Tên đăng nhập</td>
+                    <td>
+                        @Html.TextBox("TenDN", Request.Cookies["TenDN"].Value)
+                        @ViewData["Err1"]
+                    </td>
+                </tr>
+                <tr>
+                    <td>Mật khẩu: </td>
+                    <td>
+                        @Html.Password("MatKhau", Request.Cookies["Matkhau"].Value)
+                        @ViewData["Err2"]
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td>Tên đăng nhập: </td>
+                    <td>
+                        @Html.TextBox("TenDN") @ViewData["Err1"]
+                    </td>
+                </tr>
+                <tr>
+                    <td>Mật khẩu: </td>
+                    <td>
+                        @Html.Password("MatKhau")
+                        @ViewData["Err2"]
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td></td>
+                <td>
+                    @Html.CheckBox("remember") <span style="font-style:italic">Ghi nhớ thông tin đăng nhập</span>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <!-- reCAPTCHA -->
+                    <div class="g-recaptcha" data-sitekey="6LeAf9wpAAAAANJ8N_hGqpaFh79kIWtiw30PMUig"></div>
+                    <!-- End reCAPTCHA -->
+                    <input type="submit" value="Đăng nhập" id="submitBtn" />
+                </td>
+            </tr>
+        </table>
+    }
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        document.getElementById("dangNhapForm").onsubmit = function (evt) {
+            var response = grecaptcha.getResponse();
+            if (response.length == 0) {
+                // Không xác minh reCAPTCHA
+                alert("Vui lòng xác minh bạn không phải là robot.");
+                evt.preventDefault();
+            }
+        };
+    </script>
+</body>
+</html>

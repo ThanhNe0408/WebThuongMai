@@ -1,0 +1,85 @@
+﻿@model BanDoOnline.Models.SANPHAM
+@{
+    ViewBag.Title = "DeTails";
+    Layout = "~/Areas/Admin/Views/Shared/Layout_Admin.cshtml";
+}
+
+
+
+
+<style type="text/css">
+    img {
+        width: 200px;
+        margin-bottom: 20px;
+    }
+
+    h3, h4 {
+        color: red;
+        font-weight: bold;
+    }
+</style>
+<h2 style="text-align:center">Chi Tiết Sản Phẩm</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Tên sản phẩm:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TenSP)
+        </dd>
+        <dt>
+            Mô tả:
+        </dt>
+        <dd>
+            @Html.Raw(@Model.MoTa.ToString().Replace("\n",
+            "</p><p>&nbsp&nbsp&nbsp&nbsp&nbsp"))
+        </dd>
+        <dt>
+            Ảnh bìa:
+        </dt>
+        <dd>
+            <img src="~/Theme/img/img/@Model.AnhBia" alt=" @Model.TenSP">
+        </dd>
+        <dt>
+            Ngày cập nhật:
+        </dt>
+        <dd>
+            @Html.FormatValue(@Model.NgayCapNhat, "{0:dd/MM/yyyy}")
+        </dd>
+        <dt>
+            Số lượng bán:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SoLuongBan)
+
+        </dd>
+        <dt>
+            Giá bán:
+        </dt>
+        <dd>
+            @Html.FormatValue(@Model.GiaBan, "{0:#,##0}") VNĐ
+
+        </dd>
+
+        <dt>
+            Chủ đề:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DANHMUC.TenDM)
+        </dd>
+
+
+
+        
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Sửa", "Edit", new { id = Model.MaSP }) |
+    @Html.ActionLink("VỀ TRANG QUẢN LÝ SẢN PHẨM", "Index")
+</p>
+
+
+
+

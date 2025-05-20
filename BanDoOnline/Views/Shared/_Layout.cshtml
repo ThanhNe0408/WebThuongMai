@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>@ViewBag.title</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="~/Theme/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/Theme/css/style.min.css" rel="stylesheet" />
+    <link href="~/Theme/css/style.css" rel="stylesheet" />
+    <!-- Customized Bootstrap Stylesheet -->
+
+
+</head>
+
+<body>
+
+    <!-- Topbar Start -->
+    @Html.Partial("TopbarPartial", "HomeController")
+    <!-- Topbar End -->
+    <!-- Navbar Start -->
+
+    @Html.Partial("MenuPartial", "HomeController")
+    <div id="productDetail">
+        @RenderBody()
+    </div>
+    <!-- Products End -->
+    <!-- Featured Start -->
+    @RenderSection("SanPham", required: false)
+
+    <!-- Products End -->
+    <!-- Featured Start -->
+    <div class="featured-container">
+        @Html.Partial("FeaturedPartial", "HomeController")
+    </div>
+    <!-- Featured End -->
+    <!-- Footer Start -->
+    @Html.Partial("FooterPartial", "HomeController")
+    <!-- Footer End -->
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="mail/jqBootstrapValidation.min.js"></script>
+    <script src="mail/contact.js"></script>
+
+    <!-- Template Javascript -->
+  
+   
+
+    <script src="~/Theme/lib/easing/easing.min.js"></script>
+
+    <link href="~/Theme/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
+    <!-- Contact Javascript File -->
+
+    <script src="~/Theme/mail/jqBootstrapValidation.min.js"></script>
+
+    <script src="~/Theme/mail/contact.js"></script>
+    <!-- Template Javascript -->
+    <script src="~/Theme/js/main.js"></script>
+
+</body>
+
+</html>
+<style>
+    #productDetail {
+        margin-top: 20px; /* Tăng khoảng cách trên top để tránh bị đè lên */
+        padding: 20px; /* Thêm padding để tạo khoảng cách xung quanh */
+        background-color: #fff; /* Gắn background color nếu cần */
+        z-index: 2; /* Đặt z-index để đảm bảo nằm trên các phần khác */
+        position: relative;
+    }
+
+    #productDetail {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #fff;
+        z-index: 2;
+        position: relative;
+    }
+
+    .featured-container {
+        display: grid;
+        place-items: center;
+    }
+</style>
+

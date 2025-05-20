@@ -1,0 +1,131 @@
+﻿@{
+    ViewBag.Title = "Danh Sách Đơn Đặt Hàng";
+    Layout = "~/Areas/Admin/Views/Shared/Layout_Admin.cshtml";
+}
+
+<head>
+    <!-- Add this link tag to include Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-<SHA-CODE>" crossorigin="anonymous" />
+</head>
+
+<div class="container mt-3">
+    <h2>Danh Sách Đơn Đặt Hàng</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Mã Đơn Hàng</th>
+                <th>Ngày Đặt</th>
+                <th>Ngày Giao</th>
+                <th>Tình Trạng Thanh Toán</th>
+                <th class="text-right">Các Chức Năng</th>
+            </tr>
+        </thead>
+        <tbody id="tblDsDonDatHang">
+            @foreach (var donHang in Model)
+            {
+                <tr id="@donHang.MaDonHang">
+                    <td>@donHang.MaDonHang</td>
+                    <td>@donHang.NgayDat.ToString("dd/MM/yyyy")</td>
+                    <td>@donHang.NgayGiao</td>
+                    <td>@(donHang.DaThanhToan ? "Đã thanh toán" : "Chưa thanh toán")</td>
+                    <td class="text-right">
+                        <button class="btn btn-info" onclick="viewDetails('@donHang.MaDonHang')">
+                            <i class="fa fa-info-circle" aria-hidden="true"></i>
+                        </button>
+                        <button class="btn btn-warning" onclick="editOrder('@donHang.MaDonHang')">
+                            <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteOrder('@donHang.MaDonHang')">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal cho Chi Tiết -->
+<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <!-- Nội dung chi tiết sẽ được load ở đây -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailsModalLabel">Chi Tiết Đơn Hàng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="detailsModalContent">
+                <!-- Content will be loaded dynamically here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal cho Chỉnh Sửa -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <!-- Nội dung chỉnh sửa sẽ được load ở đây -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Chỉnh Sửa Đơn Hàng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="editModalContent">
+                <!-- Content will be loaded dynamically here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section script{
+    <script>
+        function deleteOrder(id) {
+            if (confirm('Bạn thực sự muốn xóa đơn đặt hàng này?')) {
+                $.post('/Admin/DonHang/Delete/' + id, function (data) {
+                    if (data.code === 200) {
+                        alert('Đơn đặt hàng đã được xóa');
+                        location.reload();
+                    } else {
+                        alert('Xóa đơn đặt hàng không thành công: ' + data.msg);
+                    }
+                });
+            }
+        }
+
+        function addOrder() {
+            // Your logic for adding a new order
+            // You can show a modal for adding a new order here
+        }
+
+        function viewDetails(id) {
+            $.get('/Admin/DonHang/Details/' + id, function (data) {
+                if (data) {
+                    $('#detailsModalContent').html(data);
+                    $('#detailsModal').modal('show');
+                } else {
+                    alert('Unable to fetch details.');
+                }
+            }).fail(function (error) {
+                console.error('Error fetching details:', error);
+            });
+        }
+
+        function editOrder(id) {
+            $.get('/Admin/DonHang/Edit/' + id, function (data) {
+                if (data) {
+                    $('#editModalContent').html(data);
+                    $('#editModal').modal('show');
+                } else {
+                    alert('Unable to fetch order details for editing.');
+                }
+            }).fail(function (error) {
+                console.error('Error fetching order details for editing:', error);
+            });
+        }
+    </script>
+}

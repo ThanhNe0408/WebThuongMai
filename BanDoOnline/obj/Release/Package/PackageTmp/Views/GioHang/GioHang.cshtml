@@ -1,0 +1,124 @@
+﻿@using BanDoOnline.Models;
+@model List<GioHang>
+@{
+    ViewBag.Title = "GioHang";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2 class="text-center">Giỏ Hàng</h2>
+
+    @if (Model.Count == 0)
+    {
+        <p class="text-center">Giỏ hàng của bạn trống rỗng.</p>
+        <div class="text-center">
+            @Html.ActionLink("Quay lại Trang Chủ", "Index", "Home", new { }, new { @class = "btn btn-primary" })
+        </div>
+    }
+    else
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Mã Sản Phẩm</th>
+                    <th>Tên Sản Phẩm</th>
+                    <th>Hình Ảnh</th>
+                    <th>Size</th>
+                    <th>Màu</th>
+                    <th>Số Lượng</th>
+                    <th>Giá Bán</th>
+                    <th>Thành Tiền</th>
+                    <th>Chi Tiết</th>
+                    <th>Xóa</th>
+                    <th>Cập nhật</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.MaSanPham</td>
+                        <td>@item.TenSanPham</td>
+                        <td><img src="~/Theme/img/img/@item.HinhAnh" style="width:100px;" alt="Hình ảnh sản phẩm" /></td>
+                        <td>@item.TenSizeChon</td>
+                        <td>@item.TenColorChon</td>
+                        @using (Html.BeginForm("CapNhatGioHang", "GioHang", new { MaSanPham = item.MaSanPham }))
+                        {
+                            <td align="center">
+                                <input type="number" min="1" name="txtSoLuong" value="@item.SoLuong" style="background-color:#f4ff94" oninput="handleQuantityChange(this)" />
+                            </td>
+                            <td align="center">@string.Format("{0:#,##0,0}", @item.GiaBan)</td>
+                            <td align="center">@string.Format("{0:#,##0,0}", @item.ThanhTien)</td>
+                            <td>
+                                <a href="@Url.Action("ChiTietSanPham", "Home", new { ProductID = item.MaSanPham })">Chi tiết</a>
+                            </td>
+                            <td>
+                                @Html.ActionLink("Xóa", "XoaSPKhoiGioHang", "GioHang", new { @maSanPham = item.MaSanPham }, new { @class = "btn btn-danger" })
+                            </td>
+                            <td>
+                                <button type="submit" class="btn btn-info">Cập nhật</button>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" style="text-align:right; font-weight:bold;">Tổng số lượng:</td>
+                    <td id="totalQuantity">@ViewBag.TongSoLuong</td>
+                    <td colspan="2" style="text-align:right; font-weight:bold;">Tổng tiền: <span id="totalAmount">@string.Format("{0:#,##0,0}", @ViewBag.TongTien) VNĐ</span></td>
+
+                    <td colspan="3" style="text-align:center;">
+                        @Html.ActionLink("Tiếp tục Mua Sắm", "Index", "Home", new { }, new { @class = "btn btn-primary" })
+                        @Html.ActionLink("Đặt Hàng", "DatHang", "GioHang", new { }, new { @class = "btn btn-success" })
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    }
+</div>
+
+<script>
+    function handleQuantityChange(input) {
+        // Lưu giá trị trước khi thay đổi
+        var previousValue = input.dataset.previousValue || 1;
+
+        // Giữ giá trị trước đó nếu người dùng nhập không phải số hoặc giảm giá trị dưới mức tối thiểu
+        if (isNaN(input.value) || input.value < 1) {
+            input.value = previousValue;
+        }
+
+        // Lưu giá trị hiện tại vào thuộc tính data để sử dụng ở lần thay đổi tiếp theo
+        input.dataset.previousValue = input.value;
+
+        // Cập nhật giá trị của cột Thành Tiền
+        var row = input.closest('tr');
+        var giaBan = parseFloat(row.cells[6].innerText.replace(/\D/g, ''));
+        var soLuong = parseInt(input.value);
+        var thanhTien = giaBan * soLuong;
+        row.cells[7].innerText = thanhTien.toLocaleString('en-US');
+
+        // Cập nhật tổng số lượng và tổng tiền
+        updateTotals();
+    }
+
+    function updateTotals() {
+        var totalQuantity = 0;
+        var totalAmount = 0;
+
+        // Lặp qua các hàng trong tbody để tính tổng số lượng và tổng tiền
+        var rows = document.querySelectorAll('tbody tr');
+        rows.forEach(function (row) {
+            var quantity = parseInt(row.cells[5].querySelector('input').value);
+            var amount = parseFloat(row.cells[7].innerText.replace(/\D/g, ''));
+
+            totalQuantity += isNaN(quantity) ? 0 : quantity;
+            totalAmount += isNaN(amount) ? 0 : amount;
+        });
+
+        // Update giá trị của các thẻ hiển thị tổng số lượng và tổng tiền
+        document.querySelector('#totalQuantity').innerText = totalQuantity;
+        document.querySelector('#totalAmount').innerText = totalAmount.toLocaleString('en-US');
+    }
+</script>
+

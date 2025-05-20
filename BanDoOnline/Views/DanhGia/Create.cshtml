@@ -1,0 +1,49 @@
+﻿@model BanDoOnline.Models.DANHGIA
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Areas/pulin/ckfinder-ckeditor/ckeditor/ckeditor.js"></script>
+
+<script src="~/Areas/pulin/ckfinder-ckeditor/ckfinder/ckfinder.js"></script>
+<h2> ĐÁNH GIÁ </h2>
+
+@using (Html.BeginForm("Create", "DanhGia", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.MaSP, "Product")
+        @Html.DropDownList("MaSP", ViewData["MaSP"] as IEnumerable<SelectListItem>, htmlAttributes: new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.MaSP, "", new { @class = "text-danger" })
+    </div>
+
+    @* Thêm HiddenField để giữ thông tin về sản phẩm *@
+    @Html.HiddenFor(model => model.MaSP)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.DiemDanhGia, "Rating")
+        @Html.DropDownListFor(model => model.DiemDanhGia, new SelectList(new[] { 1, 2, 3, 4, 5 }), htmlAttributes: new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.DiemDanhGia, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.NhanXet, "Comment")
+        @Html.TextAreaFor(model => model.NhanXet, new { @class = "form-control", rows = 4 })
+        @Html.ValidationMessageFor(model => model.NhanXet, "", new { @class = "text-danger" })
+        <script>CKEDITOR.replace('sNhanXet');</script>
+    </div>
+    <div class="form-group">
+        @Html.Label("Ngày Đánh Giá")
+        <div class="form-control">@DateTime.Now.ToString("dd/MM/yyyy")</div>
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Người Đánh Giá")
+        <div class="form-control">Nguyễn Hữu Thành</div>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Submit Review</button>
+}

@@ -1,0 +1,111 @@
+﻿@model IEnumerable<BanDoOnline.Models.SANPHAM>
+
+@{
+    Layout = null;
+}
+
+@helper Truncate(string s, int length)
+{
+    if (s.Length < length)
+    {
+        @s
+    }
+    else
+    {
+        @s.Substring(0, length)<text>...</text>
+    }
+}
+
+<style type="text/css">
+    .imgsachbannhieu {
+        width: 100%;
+        transition: all ease 0.5s;
+    }
+
+        .imgsachbannhieu:hover {
+            transform: scale(1.1);
+        }
+
+    .media-left > div {
+        overflow: hidden;
+    }
+
+    .mota {
+        line-height: 24px;
+        height: 72px;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        display: -webkit-box;
+    }
+
+    .linkhover:hover {
+        color: red;
+        text-decoration: none;
+    }
+
+    /* Thêm phần CSS sau để tạo khoảng cách giữa hình ảnh và tên sản phẩm */
+    .product-item {
+        margin-bottom: 20px;
+    }
+
+        .product-item .product-img {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+            .product-item .product-img img {
+                width: 100%;
+                height: auto;
+                transition: transform 0.5s;
+            }
+
+            .product-item .product-img:hover img {
+                transform: scale(1.1);
+            }
+
+        .product-item h6 {
+            margin-top: 10px;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        .product-item .product-img:hover img {
+            transform: scale(1.1);
+            transition: transform 0.5s;
+        }
+</style>
+
+<div class="container-fluid pt-5">
+    <div class="text-center mb-4">
+        <h2 class="section-title px-5"><span class="px-2">SẢN PHẨM THỊNH HÀNH</span></h2>
+    </div>
+    <div class="row px-xl-5 pb-3">
+        @foreach (var SANPHAM in Model)
+        {
+            <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img class="img-fluid w-100" src="~/Theme/img/@SANPHAM.AnhBia.ToString()" alt="" style="max-height: 300px; object-fit: cover;">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3" style="padding: 10px;">
+                        <h6 class="text-truncate mb-3">@SANPHAM.TenSP</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>@Html.FormatValue(SANPHAM.GiaBan, "{0:#,##0}") VNĐ</h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="@Url.Action("ChiTietSanPham", "Home", new { ProductID = SANPHAM.MaSP })" class="btn btn-sm text-dark p-0">
+                            <i class="fas fa-eye text-primary mr-1"></i>View Detail
+                        </a>
+                        <a href="@Url.Action("ThemGioHang", "GioHang", new { maSanPham = SANPHAM.MaSP })" class="btn btn-sm text-dark p-0">
+                            <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

@@ -1,0 +1,72 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Map Example</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+</head>
+<body>
+
+    <h2>Giới Thiệu Website AHT </h2>
+
+    <p>AHT được thành lập và chính thức đi vào hoạt động từ năm 2010. Sự ra đời của thương hiệu AHT là một bước tiến quan trọng trong việc định hình và phát triển một hệ thống cửa hàng thể thao uy tín và chuyên nghiệp.</p>
+
+    <p>Với định hướng: Phát triển hệ thống bán lẻ dành cho những người yêu thích thể thao. Nghiên cứu và cung cấp các sản phẩm thể thao tốt nhất, đẹp nhất, hữu ích nhất và giá cả tốt nhất làm kim chỉ nam cho mọi hoạt động kinh doanh của AHT.</p>
+
+    <p>
+        Sản phẩm: BigSport luôn đảm bảo đưa sản phẩm trực tiếp từ nhà sản xuất đến tay người dùng và kiểm soát được chất lượng để đáp ứng được nhu cầu ngày càng cao của khách hàng. Tất cả các sản phẩm tại BigSport đều có nguồn gốc xuất xứ rõ ràng, chất lượng, đa dạng chủng loại với giá hợp lý. BIGSPORT CAM KẾT KHÔNG BÁN HÀNG GIẢ, HÀNG NHÁI, HÀNG KÉM CHẤT LƯỢNG ảnh hưởng đến uy tín các thương hiệu và ảnh hưởng trực tiếp đến AHT. Chính vì vậy, các tín đồ thể thao hoàn toàn có thể an tâm và tin tưởng khi lựa chọn sử dụng sản phẩm tại BigSport.
+
+    </p>
+    <p>
+        Nhân sự: Đội ngũ nhân viên chuyên nghiệp, tâm huyết là niềm tự hào của BigSport. Nhân viên được tuyển dụng và huấn luyện, đào tạo chuyên nghiệp để phục vụ khách hàng một cách tốt nhất, giúp khách hàng trải nghiệp một cách hài lòng nhất. Bên cạnh đó, đời sống của nhân viên cũng được quan tâm, chăm sóc cùng những chính sách đãi ngộ, nâng cao tinh thần làm việc và truyền cảm hứng để nhân viên cống hiến và mang lại những giá trị cho bản thân và cộng đồng.
+    </p>
+    <p>
+        Đối tác: AHT có lợi thế trong việc hợp tác với nhiều công ty, nhiều tập đoàn lớn trong và ngoài nước và cũng là đại lý, nhà phân phối cho nhiều thương hiệu nổi tiếng thế giới.
+    </p>
+    <p>
+        AHT mong muốn mang đến cho khách hàng những sản phẩm chất lượng nhất, giá cả hợp lý nhất, dịch vụ và chế độ hậu mãi tốt nhất. Xin chân thành cảm ơn và hân hạnh được phục vụ quý khách!
+    </p>
+    <p>AHT CÓ 3 CHI NHÁNH BÁN HÀNG:</p>
+    <ul>
+        <li>220 HUỲNH VĂN LŨY - PHÚ LỢI - TDM</li>
+    </ul>
+
+    <p>Điện thoại tư vấn: 0387 589 597</p>
+
+    <p>Xin chân thành cảm ơn và hân hạnh được phục vụ quý khách!</p>
+
+    <div id="map" style="height: 400px;"></div>
+
+    <script>
+        var map = L.map('map').setView([10.9866, 106.6780], 16); // Thay đổi tọa độ địa lý
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        var marker = L.marker([10.9866, 106.6780]).addTo(map); // Thay đổi tọa độ địa lý
+
+        // Thay đổi nội dung của popup
+        marker.bindPopup('Hẻm 220/Huỳnh Văn Lũy/Phú Lợi/Thủ Dầu Một/Bình Dương').openPopup();
+
+        // Thay đổi địa chỉ đích
+        var directions = L.Routing.control({
+            waypoints: [
+                L.latLng(10.7769, 106.7009), // Điểm xuất phát (có thể thay đổi nếu cần)
+                L.latLng(10.9866, 106.6780) // 220 HUỲNH VĂN LŨY - PHÚ LỢI - Thành phố Thủ Dầu Một - Bình Dương
+            ],
+            routeWhileDragging: true
+        }).addTo(map);
+    </script>
+
+</body>
+</html>

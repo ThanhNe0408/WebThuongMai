@@ -1,0 +1,313 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/Layout_Admin.cshtml";
+}
+
+<p>
+    <label for="ddlDanhMuc">Chọn Danh Mục:</label>
+    @Html.DropDownList("ddlDanhMuc", ViewBag.DanhMucList as SelectList, "Tất cả", new { @class = "form-control", onchange = "onDanhMucChange()" })
+</p>
+
+<p>
+    <label for="ddlSanPham">Chọn Sản Phẩm:</label>
+    @Html.DropDownList("ddlSanPham", ViewBag.SanPhamList as SelectList, "Tất cả", new { @class = "form-control" })
+</p>
+
+<button class="btn btn-success" id="btnAdd"><i class="fa fa-plus" aria-hidden="true"></i> Thêm Chi Tiết Tồn Kho</button>
+<table class="table">
+    <thead>
+        <tr>
+            <th class="col-ms-9">
+                Tên Sản Phẩm
+            </th>
+            <th class="col-ms-9">
+                Tên Color
+            </th>
+            <th class="col-ms-9">
+                Tên Size
+            </th>
+            <th class="col-ms-9">
+                Số Lượng Trong Kho
+            </th>
+            <th class="col-ms-9 text-right">Các Chức Năng</th>
+        </tr>
+    </thead>
+    <tbody id="tblDsChiTiet"></tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="modalChiTiet" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Thêm các trường dữ liệu cần thiết cho modal tại đây -->
+                <input type="text" id="maSP" value="" hidden />
+                <label for="txtTenSP">Tên Sản Phẩm:</label>
+                <input type="text" class="form-control" id="txtTenSP" placeholder="Tên sản phẩm..." />
+                <label for="ddlColor">Chọn Color:</label>
+                <select class="form-control" id="ddlColor">
+                    <!-- Colors will be dynamically loaded here -->
+                </select>
+                <label for="ddlSize">Chọn Size:</label>
+                <select class="form-control" id="ddlSize">
+                    <!-- Sizes will be dynamically loaded here -->
+                </select>
+                <label for="txtSoLuongTrongKho">Số Lượng Trong Kho:</label>
+                <input type="text" class="form-control" id="txtSoLuongTrongKho" placeholder="Số lượng trong kho..." />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnSubmit">Lưu</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section script{
+    <script>
+        $(document).ready(function () {
+            LoadDsChiTiet();
+            LoadSizeAndColorLists(); // Load size and color dropdown lists
+
+            $('#ddlDanhMuc').change(function () {
+                onDanhMucChange();
+            });
+
+            $('#ddlSanPham').change(function () {
+                onSanPhamChange();
+            });
+        });
+        function LoadSizeAndColorLists() {
+            $.ajax({
+                url: '/Admin/ChiTietTonKho/GetSizeAndColorLists',
+                type: 'get',
+                success: function (data) {
+                    if (data.code == 200) {
+                        // Populate color dropdown
+                        var ddlColor = $('#ddlColor');
+                        ddlColor.empty();
+                        $.each(data.colors, function (k, v) {
+                            ddlColor.append('<option value="' + v.MaColor + '">' + v.TenColor + '</option>');
+                        });
+
+                        // Populate size dropdown
+                        var ddlSize = $('#ddlSize');
+                        ddlSize.empty();
+                        $.each(data.sizes, function (k, v) {
+                            ddlSize.append('<option value="' + v.MaSize + '">' + v.TenSize + '</option>');
+                        });
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+            });
+        }
+        // Assume this function is called when the "Danh Muc" dropdown changes
+        function LoadDsChiTiet() {
+            var maDanhMuc = $('#ddlDanhMuc').val();
+            var maSanPham = $('#ddlSanPham').val();
+
+            $.ajax({
+                url: '/Admin/ChiTietTonKho/DsChiTietTonKho',
+                type: 'get',
+                data: { maDanhMuc: maDanhMuc, maSanPham: maSanPham },
+                success: function (data) {
+                    if (data.code == 200) {
+                        $('#tblDsChiTiet').empty();
+                        $.each(data.dsChiTiet, function (k, v) {
+                            // Thêm điều kiện lọc sản phẩm còn tồn trong kho
+                            if (v.SoLuongTrongKho > 0) {
+                                let s = '<tr id="' + v.MaSP + '_' + v.MaSize + '_' + v.MaColor + '">';
+                                s += '<td class="col-ms-9">' + v.TenSP + '</td>';
+                                s += '<td class="col-ms-9">' + v.TenColor + '</td>';
+                                s += '<td class="col-ms-9">' + v.TenSize + '</td>';
+                                s += '<td class="col-ms-9">' + v.SoLuongTrongKho + '</td>';
+                                s += '<td class="col-ms-3 text-right">';
+                                s += '<button class="btn btn-sm btn-info viewBtn"><i class="fa fa-info-circle" aria-hidden="true"></i></button>&nbsp;';
+                                s += '<button class="btn btn-sm btn-warning updateBtn"><i class="fa fa-pencil-alt" aria-hidden="true"></i></button>&nbsp;';
+                                s += '<button class="btn btn-sm btn-danger deleteBtn"><i class="fa fa-trash" aria-hidden="true"></i></button>';
+                                s += '</td>';
+                                s += '</tr>';
+                                $('#tblDsChiTiet').append(s);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+        function onDanhMucChange() {
+            var maDanhMuc = $('#ddlDanhMuc').val();
+
+            // Gửi yêu cầu Ajax để lấy danh sách sản phẩm của danh mục đã chọn
+            $.ajax({
+                url: '/Admin/ChiTietTonKho/GetSanPhamByDanhMuc',
+                type: 'get',
+                data: { maDanhMuc: maDanhMuc },
+                success: function (data) {
+                    if (data.code == 200) {
+                        // Populate products dropdown
+                        var ddlSanPham = $('#ddlSanPham');
+                        ddlSanPham.empty();
+                        ddlSanPham.append('<option value="0">Tất cả</option>'); // Tùy thuộc vào yêu cầu của bạn, bạn có thể thay đổi giá trị mặc định ở đây
+                        $.each(data.products, function (k, v) {
+                            ddlSanPham.append('<option value="' + v.MaSP + '">' + v.TenSP + '</option>');
+                        });
+                    } else {
+                        alert(data.msg);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+
+
+
+        // Assume this function is called when the "San Pham" dropdown changes
+        function onSanPhamChange() {
+            LoadDsChiTiet(); // Gọi lại hàm khi sản phẩm thay đổi
+        }
+
+
+        // Click event for 'View' button
+        $(document).on('click', ".viewBtn", function () {
+            let idArr = $(this).closest('tr').attr('id').split('_');
+            let maSP = idArr[0];
+            let maSize = idArr[1];
+            let maColor = idArr[2];
+            $.ajax({
+                url: '/Admin/ChiTietTonKho/ChiTiet',
+                type: 'get',
+                data: { maSP: maSP, maSize: maSize, maColor: maColor },
+                success: function (data) {
+                    if (data.code == 200) {
+                        $('#maSP').val(data.chitiet.MaSP);
+                        $('#txtTenSP').val(data.chitiet.TenSP);
+                        $('#ddlColor').val(data.chitiet.MaColor); // Select color in the dropdown
+                        $('#ddlSize').val(data.chitiet.MaSize); // Select size in the dropdown
+                        $('#txtSoLuongTrongKho').val(data.chitiet.SoLuongTrongKho);
+                        $('#modalTitle').text('Chi Tiết Tồn Kho');
+                        $('#modalChiTiet').modal('show');
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+            });
+        });
+
+        // Click event for 'Update' button
+        $(document).on('click', ".updateBtn", function () {
+            let idArr = $(this).closest('tr').attr('id').split('_');
+            let maSP = idArr[0];
+            let maSize = idArr[1];
+            let maColor = idArr[2];
+            $.ajax({
+                url: '/Admin/ChiTietTonKho/ChiTiet',
+                type: 'get',
+                data: { maSP: maSP, maSize: maSize, maColor: maColor },
+                success: function (data) {
+                    if (data.code == 200) {
+                        // Đặt giá trị cho các trường trong modal khi nhấn nút sửa
+                        $('#maSP').val(data.chitiet.MaSP);
+                        $('#txtTenSP').val(data.chitiet.TenSP);
+                        $('#ddlColor').val(data.chitiet.MaColor);
+                        $('#ddlSize').val(data.chitiet.MaSize);
+                        $('#txtSoLuongTrongKho').val(data.chitiet.SoLuongTrongKho);
+                        $('#modalTitle').text('Cập Nhật Chi Tiết Tồn Kho');
+                        $('#modalChiTiet').modal('show');
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+            });
+        });
+
+        // Click event for 'Delete' button
+        $(document).on('click', ".deleteBtn", function () {
+            let idArr = $(this).closest('tr').attr('id').split('_');
+            let maSP = idArr[0];
+            let maSize = idArr[1];
+            let maColor = idArr[2];
+            if (confirm('Bạn thực sự muốn xóa chi tiết tồn kho này?')) {
+                $.ajax({
+                    url: '/Admin/ChiTietTonKho/XoaChiTietTonKho',
+                    type: 'post',
+                    data: { maSP: maSP, maSize: maSize, maColor: maColor },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            alert(data.msg);
+                            LoadDsChiTiet(); // Reload danh sách sau khi xóa thành công
+                        } else {
+                            alert(data.msg);
+                        }
+                    }
+                });
+            }
+        });
+
+        // Click event for 'Add' button to show modal for adding new entry
+        $(document).ready(function () {
+            $('#btnAdd').click(function () {
+                // Reset giá trị của các trường trong modal khi thêm mới
+                $('#maSP').val('');
+                $('#txtTenSP').val('');
+                $('#ddlColor').val('');
+                $('#ddlSize').val('');
+                $('#txtSoLuongTrongKho').val('');
+                $('#modalTitle').text('Thêm Chi Tiết Tồn Kho');
+                $('#modalChiTiet').modal('show');
+            });
+        });
+        $('#btnSubmit').click(function () {
+            // Lấy giá trị từ các trường nhập liệu
+            let maSP = $('#maSP').val();
+            let tenSP = $('#txtTenSP').val().trim();
+            let maColor = $('#ddlColor').val().trim();
+            let maSize = $('#ddlSize').val().trim();
+            let soLuongTrongKho = $('#txtSoLuongTrongKho').val().trim();
+
+            // Kiểm tra dữ liệu
+            if (tenSP.length == 0 || maColor.length == 0 || maSize.length == 0 || soLuongTrongKho.length == 0) {
+                alert('Vui lòng nhập đầy đủ thông tin');
+                return;
+            }
+
+            // Ghi log để kiểm tra xem sự kiện click được kích hoạt hay không
+            console.log("Button clicked");
+
+            // Gửi dữ liệu lên server
+            $.ajax({
+                url: '/Admin/ChiTietTonKho/ThemChiTietTonKho', // Sửa đường dẫn nếu cần thiết
+                type: 'post',
+                data: {
+                    maSP: maSP,
+                    maSize: maSize,
+                    maColor: maColor,
+                    soLuong: soLuongTrongKho // Chú ý sửa tên trường dữ liệu nếu cần thiết
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        alert(data.msg);
+                        $('#modalChiTiet').modal('hide');
+                        LoadDsChiTiet();
+                    } else {
+                        alert(data.msg);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Log lỗi trong trường hợp có lỗi khi gửi request
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+    </script>
+}

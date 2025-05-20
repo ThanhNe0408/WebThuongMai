@@ -1,0 +1,86 @@
+﻿@model BanDoOnline.Models.SANPHAM
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/Layout_Admin.cshtml";
+}
+
+<script src="~/ckeditor/ckeditor.js"></script>
+
+
+
+
+
+<script src="~/Areas/pulin/ckfinder-ckeditor/ckeditor/ckeditor.js"></script>
+
+<script src="~/Areas/pulin/ckfinder-ckeditor/ckfinder/ckfinder.js"></script>
+<h2>THÊM SẢN PHẨM</h2>
+@*Thêm thuộc tính cho form để upload ảnh*@
+@using (Html.BeginForm("Create", "SanPham", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+
+
+
+            <label class="control-label col-md-2">Tên sản phẩm:</label>
+            <div class="col-md-10">
+                <input type="text" size="70" name="sTenSP" value="@ViewBag.TenSP" required />
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Mô tả:</label>
+            <div class="col-md-10">
+                <textarea name="sMoTa" id="smota">@ViewBag.MoTa</textarea>
+                <script>CKEDITOR.replace('smota');</script>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Ảnh bìa:</label>
+            <div class="col-md-10">
+                <input type="file" name="fFileUpload" />
+                @*Thông báo lỗi yêu cầu phải chọn ảnh bìa*@
+                @ViewBag.ThongBao
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Ngày cập nhật:</label>
+            <div class="col-md-10">
+                <input type="date" name="dNgayCapNhat" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Số lượng:</label>
+            <div class="col-md-10">
+                <input type="number" min="1" required name="iSoLuong" value="@ViewBag.SoLuong" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Giá bán:</label>
+            <div class="col-md-10">
+                <input type="number" min="1" required name="mGiaBan" value="@ViewBag.GiaBan" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Danh mục:</label>
+            <div class="col-md-10">
+                @*Hiển thị ViewBag.MaCD vào dropdownlist*@
+                @Html.DropDownList("MaDM")
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Thêm mới" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+<div>
+    @Html.ActionLink("VỀ TRANG QUẢN LÝ SẢN PHẨM", "Index")
+</div>
+
+
+

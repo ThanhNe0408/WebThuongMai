@@ -1,0 +1,498 @@
+﻿@model IEnumerable<BanDoOnline.Models.DANHGIA>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section id="reviews" class="reviews">
+    <div class="section-header">
+        <h2>Cảm Ơn Các Bạn Đã Tin Tưởng</h2>
+        <p>Shop thể thao của chúng tôi</p>
+    </div>
+    <div class="reviews-content">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Tên Người Đánh Giá</th>
+                    <th>Điểm Đánh Giá</th>
+                    <th>Tên Sản Phẩm</th>
+                    <th>Hình Ảnh</th>
+                    <th>Ngày Đánh Giá</th>
+                    <th>Nhận Xét</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Loop through the reviews from the model -->
+                @foreach (var review in Model)
+                {
+                    <tr>
+                        <td>@(review.KHACHHANG != null ? review.KHACHHANG.HoTen : "Nguyễn Hữu Thành")</td>
+                        <td>@review.DiemDanhGia</td>
+                        <td>@(review.SANPHAM != null ? review.SANPHAM.TenSP : "N/A")</td>
+
+                        <td>
+                            @if (review.SANPHAM != null && !string.IsNullOrEmpty(review.SANPHAM.AnhBia))
+                            {
+                                <img src="@Url.Content("~/Theme/img/img/" + review.SANPHAM.AnhBia)" alt="Product Image" style="max-width: 50px; max-height: 50px;">
+                            }
+                            else
+                            {
+                                <span>No Image</span>
+                            }
+                        </td>
+                        <td>@(review.NgayDanhGia.HasValue ? review.NgayDanhGia.Value.ToString("dd/MM/yyyy") : "01/12/2023")</td>
+
+
+                        <td>@(review.NhanXet ?? "N/A")</td>
+                    </tr>
+                }
+
+                <!-- Add a new row for the review form -->
+                <tr>
+                    <td colspan="6">
+                        <!-- Include the review form here -->
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="form-container">
+                                @Html.Partial("_ReviewFormPartial") <!-- Create a partial view for the review form -->
+                            </div>
+                        }
+                        else
+                        {
+                            <p></p>
+                        }
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <a href="@Url.Action("Create", "DanhGia")" class="btn btn-primary">Thêm Đánh Giá</a>
+    </div>
+
+</section>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="form-container">
+    @if (User.Identity.IsAuthenticated)
+    {
+        @Html.Partial("_ReviewFormPartial") <!-- Create a partial view for the review form -->
+    }
+    else
+    {
+        <p></p>
+    }
+</div>
+
+<section id="reviews" class="reviews">
+    <div class="section-header">
+        <h2><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Cảm Ơn Các Bạn Đã Tin Tưởng </font></font></h2>
+        <p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">shop thể thao của tôi </font></font></p>
+    </div><!--/.section-header-->
+    <div class="reviews-content">
+        <div class="testimonial-carousel">
+            <div class="single-testimonial-box">
+                <div class="testimonial-description">
+                    <div class="testimonial-info">
+                        <div class="testimonial-img">
+
+                            <img src="~/Theme/img/img/1.jpg" alt="khách hàng" />
+                        </div><!--/.testimonial-img-->
+                        <div class="testimonial-person">
+                            <h2><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Huỳnh Hữu Hoanh </font></font></h2>
+                            <h4><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Ninh Thuận </font></font></h4>
+                            <div class="testimonial-person-star">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                        </div><!--/.testimonial-person-->
+                    </div><!--/.testimonial-info-->
+                    <div class="testimonial-comment">
+                        <p>
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    Tôi rất hài lòng về các sảm phẩm mà shop đã bán.
+                                </font><font style="vertical-align: inherit;">
+                                    Áo mới và chất lượng 100%.
+                                </font>
+                            </font>
+                        </p>
+                    </div><!--/.testimonial-comment-->
+                </div><!--/.testimonial-description-->
+            </div><!--/.single-testimonial-box-->
+            <div class="single-testimonial-box">
+                <div class="testimonial-description">
+                    <div class="testimonial-info">
+                        <div class="testimonial-img">
+
+                            <img src="~/Theme/img/img/2.jpg" alt="khách hàng" />
+                        </div><!--/.testimonial-img-->
+                        <div class="testimonial-person">
+                            <h2><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Nguyễn Hữu Thành </font></font></h2>
+                            <h4><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Bảo Lộc </font></font></h4>
+                            <div class="testimonial-person-star">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                        </div><!--/.testimonial-person-->
+                    </div><!--/.testimonial-info-->
+                    <div class="testimonial-comment">
+                        <p>
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    Tôi rất hài lòng về các sảm phẩm mà shop đã bán.
+                                </font><font style="vertical-align: inherit;">
+                                    áo mới và chất lượng 100%.
+                                </font>
+                            </font>
+                        </p>
+                    </div><!--/.testimonial-comment-->
+                </div><!--/.testimonial-description-->
+            </div><!--/.single-testimonial-box-->
+            <div class="single-testimonial-box">
+                <div class="testimonial-description">
+                    <div class="testimonial-info">
+                        <div class="testimonial-img">
+
+                            <img src="~/Theme/img/img/3.jpg" alt="khách hàng" />
+                        </div><!--/.testimonial-img-->
+                        <div class="testimonial-person">
+                            <h2><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Nguyễn Kim Lập </font></font></h2>
+                            <h4><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Phú Yên </font></font></h4>
+                            <div class="testimonial-person-star">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                        </div><!--/.testimonial-person-->
+                    </div><!--/.testimonial-info-->
+                    <div class="testimonial-comment">
+                        <p>
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    Tôi rất hài lòng về các sảm phẩm mà shop đã bán.
+                                </font><font style="vertical-align: inherit;">
+                                    Áo mới và chất lượng 100%.
+                                </font>
+                            </font>
+                        </p>
+                    </div><!--/.testimonial-comment-->
+                </div><!--/.testimonial-description-->
+            </div><!--/.single-testimonial-box-->
+            <div class="single-testimonial-box">
+                <div class="testimonial-description">
+                    <div class="testimonial-info">
+                        <div class="testimonial-img">
+
+                            <img src="~/Theme/img/img/4.jpg" alt="khách hàng" />
+                        </div><!--/.testimonial-img-->
+                        <div class="testimonial-person">
+                            <h2><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Nguyễn Lập </font></font></h2>
+                            <h4><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Phú Yên </font></font></h4>
+                            <div class="testimonial-person-star">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                        </div><!--/.testimonial-person-->
+                    </div><!--/.testimonial-info-->
+                    <div class="testimonial-comment">
+                        <p>
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    Tôi rất hài lòng về các sảm phẩm mà shop đã bán.
+                                </font><font style="vertical-align: inherit;">
+                                    Áo mới và chất lượng 100%.
+                                </font>
+                            </font>
+                        </p>
+                    </div><!--/.testimonial-comment-->
+                </div><!--/.testimonial-description-->
+            </div><!--/.single-testimonial-box-->
+            <div class="single-testimonial-box">
+                <div class="testimonial-description">
+                    <div class="testimonial-info">
+                        <div class="testimonial-img">
+
+                            <img src="~/Theme/img/img/5.jpg" alt="khách hàng" />
+                        </div><!--/.testimonial-img-->
+                        <div class="testimonial-person">
+                            <h2><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Cậu Bé Ngủ Ngày </font></font></h2>
+                            <h4><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Núi </font></font></h4>
+                            <div class="testimonial-person-star">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                        </div><!--/.testimonial-person-->
+                    </div><!--/.testimonial-info-->
+                    <div class="testimonial-comment">
+                        <p>
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    Tôi rất hài lòng về các sảm phẩm mà shop đã bán.
+                                </font><font style="vertical-align: inherit;">
+                                    Áo mới và chất lượng 100%.
+                                </font>
+                            </font>
+                        </p>
+                    </div><!--/.testimonial-comment-->
+                </div><!--/.testimonial-description-->
+            </div><!--/.single-testimonial-box-->
+            <div class="single-testimonial-box">
+                <div class="testimonial-description">
+                    <div class="testimonial-info">
+                        <div class="testimonial-img">
+
+                            <img src="~/Theme/img/img/6.jpg" alt="khách hàng" />
+                        </div><!--/.testimonial-img-->
+                        <div class="testimonial-person">
+                            <h2><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Thành Sữa</font></font></h2>
+                            <h4><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Lâm ĐỒng </font></font></h4>
+                            <div class="testimonial-person-star">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                        </div><!--/.testimonial-person-->
+                    </div><!--/.testimonial-info-->
+                    <div class="testimonial-comment">
+                        <p>
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    Tôi rất hài lòng về các sảm phẩm mà shop đã bán.
+                                </font><font style="vertical-align: inherit;">
+                                    Áo mới và chất lượng 100%.
+                                </font>
+                            </font>
+                        </p>
+                    </div><!--/.testimonial-comment-->
+                </div><!--/.testimonial-description-->
+            </div><!--/.single-testimonial-box-->
+            <div class="single-testimonial-box">
+                <div class="testimonial-description">
+                    <div class="testimonial-info">
+                        <div class="testimonial-img">
+
+                            <img src="~/Theme/img/img/7.jpg" alt="khách hàng" />
+                        </div><!--/.testimonial-img-->
+                        <div class="testimonial-person">
+                            <h2><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Lập </font></font></h2>
+                            <h4><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Phú Yên </font></font></h4>
+                            <div class="testimonial-person-star">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                        </div><!--/.testimonial-person-->
+                    </div><!--/.testimonial-info-->
+                    <div class="testimonial-comment">
+                        <p>
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    Tôi rất hài lòng về các sảm phẩm mà shop đã bán.
+                                </font><font style="vertical-align: inherit;">
+                                    Áo mới và chất lượng 100%.
+                                </font>
+                            </font>
+                        </p>
+                    </div><!--/.testimonial-comment-->
+                </div><!--/.testimonial-description-->
+            </div><!--/.single-testimonial-box-->
+
+        </div>
+
+
+
+
+
+
+
+    </div>
+    <button id="loadMore" class="submit-button">Xem thêm đánh giá</button>
+
+</section>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Hiển thị thêm đánh giá khi nhấp vào nút "Xem thêm"
+        $('#loadMore').on('click', function () {
+            $('.testimonial-carousel.testimonials-container').toggleClass('show-more');
+        });
+    });
+</script>
+
+<style>
+    /* Thêm CSS này vào stylesheet hiện tại hoặc tạo một stylesheet mới */
+    #loadMore {
+        display: block;
+        margin: 20px auto;
+    }
+
+    /* Form Container */
+    .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #f8f8f8;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Form Groups */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+        /* Labels */
+        .form-group label {
+            display: block;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+    /* Input and Textarea Styles */
+    input[type="text"],
+    input[type="email"],
+    textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+
+    /* Select Styles */
+    select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: 14px;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background: url('data:image/svg+xml;utf8,<svg fill="%23444444" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z" /></svg>') no-repeat right 10px center/15px 15px;
+    }
+
+    /* Submit Button */
+    .submit-button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+        .submit-button:hover {
+            background-color: #45a049;
+        }
+
+    /* Testimonial Section */
+    #reviews {
+        background-color: #f8f8f8;
+        padding: 60px 0;
+    }
+
+    .section-header h2 {
+        font-size: 36px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .section-header p {
+        font-size: 18px;
+        color: #666;
+    }
+
+    .reviews-content {
+        margin-top: 40px;
+    }
+
+    /* Thay đổi CSS cho Testimonial Carousel */
+    .testimonial-carousel {
+        display: flex;
+        flex-wrap: nowrap; /* Không cho phép quấn */
+        overflow-x: auto; /* Cho phép cuộn ngang khi có nhiều hơn 3 phần tử */
+        margin-bottom: 20px;
+    }
+
+    .single-testimonial-box {
+        flex: 0 0 calc(33.333% - 20px); /* Chia ra 3 cột, có khoảng trắng giữa chúng */
+        margin-right: 20px;
+    }
+
+    .testimonial-img img {
+        max-width: 100%;
+        height: auto;
+        border-bottom: 2px solid #ddd;
+        margin-bottom: 10px; /* Thêm margin dưới hình ảnh */
+    }
+
+    .testimonial-description {
+        background-color: #fff; /* Màu nền cho phần mô tả đánh giá */
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Đổ bóng cho phần đánh giá */
+    }
+
+    .testimonial-person {
+        padding: 20px;
+        text-align: center; /* Căn giữa nội dung */
+    }
+
+        .testimonial-person h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .testimonial-person h4 {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+    .testimonial-person-star {
+        color: #f39c12;
+    }
+
+    .testimonial-comment {
+        padding: 20px;
+        text-align: justify; /* Căn đều nội dung */
+    }
+
+        .testimonial-comment p {
+            font-size: 16px;
+            color: #777;
+            line-height: 1.6;
+        }
+</style>

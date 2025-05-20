@@ -1,0 +1,143 @@
+﻿@model CategoryProductsViewModel
+@using PagedList.Mvc
+
+@{
+    ViewBag.Title = "Trang Chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="row text-center">
+    <div class="col-12 mb-4">
+        <h2 class="section-title px-5"><span class="px-2">@Model.CategoryName</span></h2>
+    </div>
+
+    @foreach (var sanPham in Model.Products)
+    {
+        <div class="col-sm-3 custom-column">
+            <div class="thumbnail">
+                <img src="@Url.Content("~/Theme/img/img/" + sanPham.AnhBia)" alt="Ảnh sản phẩm" class="img-responsive img-rounded imgbook" style="width: 100%; height: auto;">
+                <div class="card-footer bg-light border">
+                    <h6 class="text-dark mb-3">@sanPham.TenSP</h6>
+                    <a href="@Url.Action("ChiTietSanPham", "Home", new { ProductID = sanPham.MaSP })" class="btn btn-sm text-dark p-0" style="margin-bottom: 10px;">
+                        <i class="fas fa-eye text-primary mr-1"></i> Xem chi tiết
+                    </a>
+                    <a href="@Url.Action("ThemGioHang1","GioHang", new { ms = sanPham.MaSP, url = Request.Url.ToString() })" class="btn btn-primary" role="button">
+                        <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> Thêm vào giỏ hàng
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+
+    @{
+        var pagerOptions = new PagedListRenderOptions
+        {
+            Display = PagedListDisplayMode.IfNeeded,
+            MaximumPageNumbersToDisplay = 5,
+            EllipsesFormat = "&#8230;",
+            LinkToFirstPageFormat = "«",
+            LinkToPreviousPageFormat = "‹",
+            LinkToNextPageFormat = "›",
+            LinkToLastPageFormat = "»"
+        };
+    }
+
+    <div class="pagination-container text-center pagination-custom">
+        @Html.PagedListPager(Model.Products, page => Url.Action("Index", new { page = page, categoryId = Model.Products.First().MaDM }), pagerOptions)
+    </div>
+</div>
+
+<style>
+    .custom-column {
+        flex: 0 0 25%; /* Each column takes up 25% of the container width */
+        max-width: 25%; /* Ensure max-width is 25% to fit 4 items in a row */
+    }
+
+    .thumbnail {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        margin: 10px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #fff;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+    }
+
+        .thumbnail img {
+            width: 100%;
+            height: auto;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+
+        .thumbnail:hover {
+            transform: scale(1.05);
+        }
+
+    .card-footer {
+        padding: 20px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+
+        .card-footer h6 {
+            margin-bottom: 10px;
+        }
+
+        .card-footer .btn {
+            margin-bottom: 5px;
+        }
+
+        .card-footer a.text-dark:hover {
+            color: #FF5733;
+            transition: color 0.3s ease;
+        }
+
+    .col-12 {
+        display: inline;
+        text-align: center;
+    }
+
+    .pagination-custom {
+        margin-top: 20px; /* Khoảng cách giữa phân trang và nội dung khác */
+    }
+
+    .pagination a {
+        font-size: 18px; /* Kích thước chữ của các nút phân trang */
+    }
+
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+        overflow-x: auto;
+        width: 100%;
+        max-width: 100%; /* Thêm dòng này để đảm bảo không bị vượt quá kích thước của màn hình */
+    }
+
+    .pagination a {
+        font-size: 18px;
+        padding: 15px 20px;
+        margin: 5px;
+        border: 1px solid #FFC0CB;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #333;
+        white-space: nowrap; /* Thêm dòng này để ngăn chặn việc ngắn dòng văn bản */
+    }
+
+    .pagination .active a {
+        background-color: #FFC0CB;
+        color: #fff;
+    }
+</style>

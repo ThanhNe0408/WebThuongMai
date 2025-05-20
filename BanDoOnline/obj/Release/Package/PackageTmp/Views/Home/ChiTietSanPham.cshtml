@@ -1,0 +1,246 @@
+﻿@model BanDoOnline.Models.SANPHAM
+
+@{
+    ViewBag.Title = "ChiTietSanPham";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid py-5 text-center">
+    <h2>Chi tiết sản phẩm</h2>
+</div>
+<div class="container-fluid py-5">
+    <div class="row px-xl-5">
+        <div class="col-lg-5 pb-5">
+            <div id="product-carousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner border">
+                    <div class="carousel-item active">
+                        <img class="w-100 h-100" src="~/Theme/img/img/@Model.AnhBia.ToString()" alt="Product Image">
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#product-carousel" data-slide="prev">
+                    <i class="fa fa-2x fa-angle-left text-dark"></i>
+                </a>
+                <a class="carousel-control-next" href="#product-carousel" data-slide="next">
+                    <i class="fa fa-2x fa-angle-right text-dark"></i>
+                </a>
+            </div>
+
+        </div>
+
+        <div class="col-lg-7 pb-5">
+            <h3 class="font-weight-semi-bold">@Model.TenSP</h3>
+            <div class="d-flex mb-3">
+                <!-- Thêm logic đánh giá sao của bạn ở đây -->
+            </div>
+            <p>Giá bán: @Html.FormatValue(@Model.GiaBan, "{0:#,##0}") VNĐ</p>
+            <p class="mb-4">@Model.MoTa</p>
+            <!-- Thêm logic chọn kích thước -->
+            <div class="container">
+                <!-- Hàng chọn màu sắc -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Chọn Colors</h3>
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            @foreach (var tonKho in Model.CHITIETTONKHOs.Where(tk => tk.MaColor != null).GroupBy(tk => tk.MaColor))
+                            {
+                                var mau = tonKho.First().COLOR;
+                                <label class="btn btn-outline-secondary">
+                                    <input type="radio" name="colorOption" id="@($"color{mau.MaColor}")" autocomplete="off" value="@mau.MaColor"> @mau.TenColor
+                                </label>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hàng chọn kích thước -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Chọn Size</h3>
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            @foreach (var tonKho in Model.CHITIETTONKHOs.Where(tk => tk.MaSize != null).GroupBy(tk => tk.MaSize))
+                            {
+                                var size = tonKho.First().SIZE;
+                                <label class="btn btn-outline-secondary">
+                                    <input type="radio" name="sizeOption" id="@($"size{size.MaSize}")" autocomplete="off" value="@size.MaSize"> @size.TenSize
+                                </label>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <!-- Thêm logic nhập số lượng và nút Thêm vào giỏ hàng -->
+            <!-- Thêm logic nhập số lượng và nút Thêm vào giỏ hàng -->
+            <div class="d-flex align-items-center mb-4 pt-2">
+                <label for="quantityInput" class="mr-2">Số lượng:</label>
+                <input type="number" id="quantityInput" value="1" min="1">
+                <a href="javascript:void(0);" class="btn btn-primary" onclick="addToCart('@Url.Action("ThemGioHang", "GioHang", new { ms = Model.MaSP, url = Request.Url.ToString() })')">
+                    <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>Thêm vào giỏ hàng
+                </a>
+            </div>
+
+            <!-- Thêm nút trở lại -->
+            <a href="javascript:history.back()" class="btn btn-secondary">Trở lại</a>
+
+
+            <!-- Thêm các liên kết chia sẻ -->
+            <div class="d-flex pt-2">
+                <a href="https://www.facebook.com/" class="mr-3"><i class="fab fa-facebook"></i></a>
+                <a href="https://twitter.com/home" class="mr-3"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.instagram.com/" class="mr-3"><i class="fab fa-instagram"></i></a>
+            </div>
+
+
+
+        </div>
+    </div>
+
+    <!-- Thêm thông tin bổ sung và tab đánh giá ở đây -->
+    <div class="text-center mb-4">
+        <h2 class="section-title px-5"><span class="px-2">Bạn cũng có thể thích </span></h2>
+    </div>
+
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="owl-carousel related-carousel">
+                <!-- Sử dụng vòng lặp để hiển thị sản phẩm khác -->
+                @if (Model.GiaBan.HasValue)
+                {
+                    <div class="card product-item border-0">
+                        <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                            <img class="img-fluid w-100" src="~/Theme/img/img/@Model.AnhBia.ToString()" alt="@Model.TenSP">
+                        </div>
+                        <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                            <h6 class="text-truncate mb-3">@Model.TenSP</h6>
+                            <div class="d-flex justify-content-center">
+                                <h6>@Html.FormatValue(Model.GiaBan, "{0:#,##0}") VNĐ</h6>
+                                <h6 class="text-muted ml-2"><del>@Html.FormatValue(Model.GiaBan, "{0:#,##0}") VNĐ</del></h6>
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between bg-light border">
+                            <a href="@Url.Action("ChiTietSanPham", "Home", new { ProductID = Model.MaSP })" class="btn btn-sm text-dark p-0" style="margin-bottom: 10px;">
+                                <i class="fas fa-eye text-primary mr-1"></i> Xem chi tiết
+                            </a>
+                            <button class="btn btn-sm text-dark p-0" onclick="addToCart('@Url.Action("ThemGioHang", "GioHang", new { ms = Model.MaSP, url = Request.Url.ToString() })')">
+                                <i class="fas fa-shopping-cart text-primary mr-1"></i> Add To Cart
+                            </button>
+                        </div>
+                    </div>
+                }
+
+                <!-- Sử dụng vòng lặp để hiển thị sản phẩm khác -->
+                @foreach (var otherProduct in ViewBag.RelatedProducts)
+                {
+                    <div class="card product-item border-0">
+                        <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                            <img class="img-fluid w-100" src="~/Theme/img/img/@otherProduct.AnhBia.ToString()" alt="@otherProduct.TenSP">
+                        </div>
+                        <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                            <h6 class="text-truncate mb-3">@otherProduct.TenSP</h6>
+                            <div class="d-flex justify-content-center">
+                                <h6>@Html.FormatValue(otherProduct.GiaBan, "{0:#,##0}") VNĐ</h6>
+                                <h6 class="text-muted ml-2"><del>@Html.FormatValue(otherProduct.GiaBan, "{0:#,##0}") VNĐ</del></h6>
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between bg-light border">
+                            <a href="@Url.Action("ChiTietSanPham", "Home", new { ProductID = otherProduct.MaSP })" class="btn btn-sm text-dark p-0" style="margin-bottom: 10px;">
+                                <i class="fas fa-eye text-primary mr-1"></i> Xem chi tiết
+                            </a>
+                            <button class="btn btn-sm text-dark p-0" onclick="addToCart('@Url.Action("ThemGioHang", "GioHang", new { ms = otherProduct.MaSP, url = Request.Url.ToString() })')">
+                                <i class="fas fa-shopping-cart text-primary mr-1"></i> Add To Cart
+                            </button>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+<style>
+    .btn-group-toggle label.btn {
+        background-color: #FFD9E6; /* Màu hồng nhạt */
+        color: #000; /* Màu chữ */
+    }
+
+        .btn-group-toggle label.btn.active {
+            background-color: #FF1493; /* Màu hồng đậm cho nút đã chọn */
+            color: #fff; /* Màu chữ cho nút đã chọn */
+        }
+
+        .btn-group-toggle label.btn:hover {
+            background-color: #FFB6C1; /* Màu hồng nhạt khi di chuột vào */
+            color: #000; /* Màu chữ khi di chuột vào */
+        }
+
+    .owl-carousel.related-carousel {
+        display: flex;
+        overflow-x: auto;
+        padding: 15px; /* Adjust padding as needed */
+    }
+
+    /* Style each product card */
+    .card.product-item {
+        width: 200px; /* Set a fixed width for each card */
+        margin-right: 15px; /* Adjust margin between cards */
+    }
+
+        /* Make images responsive and limit their height */
+        .card.product-item .card-header.product-img img {
+            width: 100%;
+            height: auto;
+            max-height: 150px; /* Adjust the maximum height as needed */
+        }
+
+        /* Adjust other styles as needed */
+        .card.product-item .card-body,
+        .card.product-item .card-footer {
+            /* Add your styles for body and footer */
+        }
+</style>
+<script>
+            function addToCart(url) {
+                var selectedColor = $("input[name='colorOption']:checked").val();
+                var selectedSize = $("input[name='sizeOption']:checked").val();
+                var quantity = $("#quantityInput").val();
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {
+                        ms: @(Model.MaSP),
+                        quantity: quantity,
+                        sizeId: selectedSize,
+                        colorId: selectedColor
+                    },
+                    success: function (data) {
+                        // Hiển thị thông báo đã thêm vào giỏ hàng
+                        alert('Đã thêm vào giỏ hàng');
+
+                        // Cập nhật huy hiệu giỏ hàng
+                        updateCartBadge(data.updatedQuantity);
+                    },
+                    error: function () {
+                        alert('Đã thêm vào giỏ hàng.');
+                        // Cập nhật huy hiệu giỏ hàng
+                        updateCartBadge(data.updatedQuantity);
+                    }
+
+                });
+           
+            }
+
+        function updateCartBadge(updatedQuantity) {
+            // Cập nhật huy hiệu
+            var badgeElement = $(".fa-shopping-cart + .badge");
+
+            if (badgeElement.length) {
+                badgeElement.text(updatedQuantity);
+            }
+        }
+</script>

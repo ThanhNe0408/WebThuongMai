@@ -1,0 +1,79 @@
+﻿@using BanDoOnline.Models
+@model KHACHHANG
+@{
+    ViewBag.Title = "DangKy";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DangKy</title>
+    <style type="text/css">
+        tr {
+            height: 40px;
+        }
+
+        h4 {
+            color: red;
+            text-align: center;
+        }
+
+        h3 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h4>@ViewBag.ThongBao</h4>
+    </div>
+    <h3>ĐĂNG KÝ THÀNH VIÊN</h3>
+    @using (Html.BeginForm("DangKy", "User"))
+    {
+        @Html.AntiForgeryToken() <!--Thêm ValidateAntiForgeryToken để bảo vệ chống tấn công CSRF-->
+        @Html.ValidationSummary(true)
+
+        <table align="center">
+            <tr>
+                <td>Họ tên:</td>
+                <td>@Html.TextBoxFor(model => model.HoTen) @Html.ValidationMessageFor(model => model.HoTen)</td>
+            </tr>
+            <tr>
+                <td>Tên đăng nhập:</td>
+                <td>@Html.TextBoxFor(model => model.TaiKhoan) @Html.ValidationMessageFor(model => model.TaiKhoan)</td>
+            </tr>
+            <tr>
+                <td>Mật khẩu:</td>
+                <td>@Html.PasswordFor(model => model.MatKhau) @Html.ValidationMessageFor(model => model.MatKhau)</td>
+            </tr>
+            <tr>
+                <td>Mật khẩu nhập lại:</td>
+                <td>@Html.Password("MatKhauNhapLai")</td>
+            </tr>
+            <tr>
+                <td>Email:</td>
+                <td>@Html.TextBoxFor(model => model.Email) @Html.ValidationMessageFor(model => model.Email)</td>
+            </tr>
+            <tr>
+                <td>Điện thoại:</td>
+                <td>@Html.TextBoxFor(model => model.DienThoai) @Html.ValidationMessageFor(model => model.DienThoai)</td>
+            </tr>
+            <tr>
+                <td>Ngày sinh:</td>
+                <td>@Html.TextBoxFor(model => model.NgaySinh, new { type = "date" }) @Html.ValidationMessageFor(model => model.NgaySinh)</td>
+            </tr>
+            <tr>
+                <td>Địa chỉ:</td>
+                <td>@Html.TextBoxFor(model => model.DiaChi)</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="Đăng ký" /> <input type="reset" value="Xóa Thông Tin" /></td>
+            </tr>
+        </table>
+    }
+</body>
+</html>

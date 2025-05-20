@@ -1,0 +1,278 @@
+﻿<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/Layout_Admin.cshtml";
+}
+
+
+
+
+
+
+<p>
+    <button class="btn btn-success" id="btnAdd"><i class="fa fa-plus" aria-hidden="true"></i>Thêm Khách Hàng</button>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th class="col-ms-9">
+                Họ và Tên
+            </th>
+            <th class="col-ms-9">
+                Tài Khoản
+            </th>
+            <th class="col-ms-9">
+                Email
+            </th>
+            <th class="col-ms-9 text-right">Các Chức Năng</th>
+        </tr>
+    </thead>
+    <tbody id="tblDsKhachHang"></tbody>
+</table>
+
+@section script{
+    <script>
+        $(document).ready(function () {
+            LoadDsKhachHang();
+        })
+        function LoadDsKhachHang() {
+            $.ajax({
+                url: '/Admin/KhachHang/GetKhachHangs',
+                type: 'get',
+                success: function (data) {
+                    // console.log(data);
+                    if (data.code == 200) {
+                        $('#tblDsKhachHang').empty();
+                        $.each(data.khachHangs, function (k, v) {
+                            let s = '<tr id = "' + v.MaKH + '">';
+                            s += '<td class = "col-ms-9">' + v.HoTen + '</td>';
+                            s += '<td class = "col-ms-9">' + v.TaiKhoan + '</td>';
+                            s += '<td class = "col-ms-9">' + v.Email + '</td>';
+                            s += '<td class="col-ms-3 text-right">';
+                            s += '<button class="btn btn-sm btn-info" name="view"><i class="fas fa-info-circle"></i></button>&nbsp;';
+                            s += '<button class="btn btn-sm btn-warning" name="update"><i class="fas fa-pencil-alt"></i></button>&nbsp;';
+                            s += '<button class="btn btn-sm btn-danger" name="delete"><i class="fas fa-trash"></i></button>';
+                            s += '</td>';
+                            s += '</tr>';
+
+                            $('#tblDsKhachHang').append(s);
+                        })
+                    }
+                }
+            });
+        }
+        //Sự kiện click button chi tiết tại môi row của table:
+        $(document).on('click', "button[name='view']", function () {
+            let idKH = $(this).closest('tr').attr('id');
+            $.ajax({
+                url: '/Admin/KhachHang/GetKhachHangDetails',
+                type: 'get',
+                data: {
+                    maKH: idKH
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        //Đưa dữ lieu lên modal
+                        $('#txtHoTen').val(data.khachHangDetails.HoTen);
+                        $('#txtTaiKhoan').val(data.khachHangDetails.TaiKhoan);
+                        $('#txtEmail').val(data.khachHangDetails.Email);
+                        //Khong cho chinh sửa tren the input:
+                        $('#txtHoTen').prop('readonly', true);
+                        $('#txtTaiKhoan').prop('readonly', true);
+                        $('#txtEmail').prop('readonly', true);
+                        //Ấn nút submit:
+                        $('#btnSubmit').hide();
+                        $('#modalTitle').text('Xem Chi Tiết Khách Hàng');
+                        $('#modalKhachHang').modal();
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+            })
+        });
+        //Hiện modal để thêm mới
+        $('#btnAdd').click(function () {
+            $('#modalTitle').text('Thêm Mới Khách Hàng');
+            $('#maKH').val('');
+            $('#txtHoTen').val('');
+            $('#txtTaiKhoan').val('');
+            $('#txtMatKhau').val('');
+            $('#txtEmail').val('');
+            $('#txtNgaySinh').val('');
+            $('#txtDienThoai').val('');
+            $('#txtDiaChi').val('');
+            //Cho chinh sửa tren the input:
+            $('#txtHoTen').prop('readonly', false);
+            $('#txtTaiKhoan').prop('readonly', false);
+            $('#txtEmail').prop('readonly', false);
+            $('#btnSubmit').show();
+            $('#modalKhachHang').modal();
+        })
+        //Click vào nút update để cập nhật dữ liệu
+        $(document).on('click', "button[name='update']", function () {
+            let idKH = $(this).closest('tr').attr('id');
+            $.ajax({
+                url: '/Admin/KhachHang/GetKhachHangDetails',
+                type: 'get',
+                data: {
+                    maKH: idKH
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        //Đưa dữ liệu lên modal
+                        $('#txtHoTen').val(data.khachHangDetails.HoTen);
+                        $('#txtTaiKhoan').val(data.khachHangDetails.TaiKhoan);
+                        $('#txtMatKhau').val(data.khachHangDetails.MatKhau);
+                        $('#txtEmail').val(data.khachHangDetails.Email);
+                        $('#txtNgaySinh').val(data.khachHangDetails.NgaySinh);
+                        $('#txtDienThoai').val(data.khachHangDetails.DienThoai);
+                        $('#txtDiaChi').val(data.khachHangDetails.DiaChi);
+                        //Cho chinh sửa trên thể input:
+                        $('#txtHoTen').prop('readonly', false);
+                        $('#txtTaiKhoan').prop('readonly', false);
+                        $('#txtMatKhau').prop('readonly', false);
+                        $('#txtEmail').prop('readonly', false);
+                        $('#txtNgaySinh').prop('readonly', false);
+                        $('#txtDienThoai').prop('readonly', false);
+                        $('#txtDiaChi').prop('readonly', false);
+                        //Hiện nút submit:
+                        $('#btnSubmit').show();
+                        $('#modalTitle').text('Cập Nhật Khách Hàng');
+                        $('#maKH').val(idKH);
+                        $('#modalKhachHang').modal();
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+            })
+        });
+        //Sự kiện click button Xóa tại mỗi row của table:
+        $(document).on('click', "button[name='delete']", function () {
+            let idKH = $(this).closest('tr').attr('id');
+            if (confirm('Bạn thực sự muốn xóa khách hàng này. ')) {
+                $.ajax({
+                    url: '/Admin/KhachHang/DeleteKhachHang',
+                    type: 'post',
+                    data: {
+                        maKH: idKH
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            alert(data.msg);
+                            LoadDsKhachHang();
+                        } else {
+                            alert(data.msg);
+                        }
+                    }
+                })
+            }
+        });
+        $('#btnSubmit').click(function () {
+            let hoTen = $('#txtHoTen').val().trim();
+            let taiKhoan = $('#txtTaiKhoan').val().trim();
+            let matKhau = $('#txtMatKhau').val().trim();
+            let email = $('#txtEmail').val().trim();
+            let ngaySinh = $('#txtNgaySinh').val().trim();
+            let dienThoai = $('#txtDienThoai').val().trim();
+            let diaChi = $('#txtDiaChi').val().trim();
+            if (hoTen.length == 0 || taiKhoan.length == 0 || matKhau.length == 0 || email.length == 0 || ngaySinh.length == 0 || dienThoai.length == 0 || diaChi.length == 0) {
+                alert('Vui lòng nhập đầy đủ thông tin');
+                return;
+            }
+            let maKH = $('#maKH').val().trim();
+            if (maKH == 0) {
+                $.ajax({
+                    url: '/Admin/KhachHang/AddKhachHang',
+                    type: 'post',
+                    data: {
+                        HoTen: hoTen,
+                        TaiKhoan: taiKhoan,
+                        MatKhau: matKhau,
+                        Email: email,
+                        NgaySinh: ngaySinh,
+                        DienThoai: dienThoai,
+                        DiaChi: diaChi
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            alert(data.msg);
+                            LoadDsKhachHang();
+                            $('#txtHoTen').val('');
+                            $('#txtTaiKhoan').val('');
+                            $('#txtMatKhau').val('');
+                            $('#txtEmail').val('');
+                            $('#txtNgaySinh').val('');
+                            $('#txtDienThoai').val('');
+                            $('#txtDiaChi').val('');
+                        } else {
+                            alert(data.msg);
+                        }
+                    }
+                });
+            }
+            else {
+                $.ajax({
+                    url: '/Admin/KhachHang/UpdateKhachHang',
+                    type: 'post',
+                    data: {
+                        MaKH: maKH,
+                        HoTen: hoTen,
+                        TaiKhoan: taiKhoan,
+                        MatKhau: matKhau,
+                        Email: email,
+                        NgaySinh: ngaySinh,
+                        DienThoai: dienThoai,
+                        DiaChi: diaChi
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            alert(data.msg);
+                            $('#modalKhachHang').modal('hide');//Dóng modal
+                            LoadDsKhachHang();
+                        } else {
+                            alert(data.msg);
+                        }
+                    }
+                });
+            }
+        })
+    </script>
+}
+
+<div class="modal fade" id="modalKhachHang" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="panel panel-primary">
+                <div class="panel-heading" id="modalTitle"></div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <input type="text" id="maKH" value="" hidden />
+                        <label>Họ và Tên:</label>
+                        <input type="text" class="form-control" id="txtHoTen" placeholder="Họ và tên..." />
+                        <label>Tài Khoản:</label>
+                        <input type="text" class="form-control" id="txtTaiKhoan" placeholder="Tài khoản..." />
+                        <label>Mật Khẩu:</label>
+                        <input type="password" class="form-control" id="txtMatKhau" placeholder="Mật khẩu..." />
+                        <label>Email:</label>
+                        <input type="email" class="form-control" id="txtEmail" placeholder="Email..." />
+                        <label>Ngày Sinh:</label>
+                        <input type="date" class="form-control" id="txtNgaySinh" />
+                        <label>Điện Thoại:</label>
+                        <input type="tel" class="form-control" id="txtDienThoai" placeholder="Điện thoại..." />
+                        <label>Địa Chỉ:</label>
+                        <input type="text" class="form-control" id="txtDiaChi" placeholder="Địa chỉ..." />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnSubmit">Lưu</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

@@ -1,0 +1,196 @@
+﻿<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-xBWIq7NSWdC/3jTOkAeR9DDdITKyU/fJ3fgd3rHTLzQeiZy2XMj5b9eCrftVJ+ZP8l3GiDfy5AtOnoaj5gXekQ==" crossorigin="anonymous" />
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/Layout_Admin.cshtml";
+}
+
+
+<p>
+    <button class="btn btn-success" id="btnAdd"><i class="fa fa-plus" aria-hidden="true"></i>Thêm Danh Mục</button>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th class="col-ms-9">
+                Tên Danh Mục
+            </th>
+            <th class="col-ms-9 text-right">Các Chức Năng</th>
+        </tr>
+    </thead>
+    <tbody id="tblDsDanhMuc"></tbody>
+</table>
+
+@section script{
+    <script>
+        $(document).ready(function () {
+            LoadDsDanhMuc();
+        })
+
+        function LoadDsDanhMuc() {
+            $.ajax({
+                url: '/Admin/DanhMuc1/DsDanhMuc',
+                type: 'get',
+                success: function (data) {
+                    if (data.code == 200) {
+                        $('#tblDsDanhMuc').empty();
+                        $.each(data.dsDM, function (k, v) {
+                            let s = '<tr id = "' + v.MaDM + '">';
+                            s += '<td class = "col-ms-9">' + v.TenDM + '</td>';
+                            s += '<td class = "col-ms-3 text-right">';
+                            s += '<button class="btn btn-sm btn-info" name="view"><i class="fa fa-info-circle" aria-hidden="true"></i></button> &nbsp';
+                            s += ' <button class="btn btn-sm btn-warning" name="update"><i class="fas fa-edit" aria-hidden="true"></i></button>&nbsp;';
+                            s += '<button class="btn btn-sm btn-danger" name="delete" ><i class="fa fa-trash" aria-hidden="true"></i></button>';
+                            s += '</td>';
+                            s += '</tr>';
+                            $('#tblDsDanhMuc').append(s);
+                        })
+                    }
+                }
+            });
+        }
+
+        $(document).on('click', "button[name='view']", function () {
+            let idDM = $(this).closest('tr').attr('id');
+            $.ajax({
+                url: '/Admin/DanhMuc1/Details',
+                type: 'get',
+                data: {
+                    maDM: idDM
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        $('#txtTenDanhMuc').val(data.dm.TenDM);
+                        $('#txtTenDanhMuc').prop('readonly', true);
+                        $('#btnSubmit').hide();
+                        $('#modalTitle').text('Xem Chi Tiết Danh Mục');
+                        $('#modalDanhMuc').modal();
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+            })
+        });
+
+        $('#btnAdd').click(function () {
+            $('#modalTitle').text('Thêm Mới Danh Mục');
+            $('#maDM').val('');
+            $('#txtTenDanhMuc').val('');
+            $('#txtTenDanhMuc').prop('readonly', false);
+            $('#btnSubmit').show();
+            $('#modalDanhMuc').modal();
+        })
+
+        $(document).on('click', "button[name='update']", function () {
+            let idDM = $(this).closest('tr').attr('id');
+            $.ajax({
+                url: '/Admin/DanhMuc1/Details',
+                type: 'get',
+                data: {
+                    maDM: idDM
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        $('#txtTenDanhMuc').val(data.dm.TenDM);
+                        $('#txtTenDanhMuc').prop('readonly', false);
+                        $('#btnSubmit').show();
+                        $('#modalTitle').text('Cập Nhật Danh Mục');
+                        $('#maDM').val(idDM);
+                        $('#modalDanhMuc').modal();
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+            })
+        });
+
+        $(document).on('click', "button[name='delete']", function () {
+            let idDM = $(this).closest('tr').attr('id');
+            if (confirm('Bạn thực sự muốn xóa danh mục này. ')) {
+                $.ajax({
+                    url: '/Admin/DanhMuc1/Xoa',
+                    type: 'post',
+                    data: {
+                        maDM: idDM
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            alert(data.msg);
+                            LoadDsDanhMuc();
+                        } else {
+                            alert(data.msg);
+                        }
+                    }
+                })
+            }
+        });
+
+        $('#btnSubmit').click(function () {
+            let strTenDanhMuc = $('#txtTenDanhMuc').val().trim();
+            if (strTenDanhMuc.length == 0) {
+                alert('Vui lòng nhập tên danh mục');
+                return;
+            }
+
+            let maDM = $('#maDM').val().trim();
+            if (maDM == 0) {
+                $.ajax({
+                    url: '/Admin/DanhMuc1/AddDanhMuc',
+                    type: 'post',
+                    data: {
+                        strTenDM: strTenDanhMuc
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            alert(data.msg);
+                            LoadDsDanhMuc();
+                            $('#txtTenDanhMuc').val('');
+                        } else {
+                            alert(data.msg);
+                        }
+                    }
+                });
+            }
+            else {
+                $.ajax({
+                    url: '/Admin/DanhMuc1/Update',
+                    type: 'post',
+                    data: {
+                        maDM: maDM,
+                        strTenDM: strTenDanhMuc
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            alert(data.msg);
+                            $('#modalDanhMuc').modal('hide');
+                            LoadDsDanhMuc();
+                        } else {
+                            alert(data.msg);
+                        }
+                    }
+                });
+            }
+        })
+    </script>
+}
+
+<div class="modal fade" id="modalDanhMuc" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="panel panel-primary">
+                <div class="panel-heading" id="modalTitle"></div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <input type="text" id="maDM" value="" hidden />
+                        <label>Tên Danh Mục:</label>
+                        <input type="text" class="form-control" id="txtTenDanhMuc" placeholder="Tên danh mục..." />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnSubmit">Lưu</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
